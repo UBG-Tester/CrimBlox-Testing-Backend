@@ -1,26 +1,34 @@
 # CrimBlox Testing Backend
 
-CrimBlox backend and Supabase infrastructure work. This repository targets **Supabase** for database, authentication, and storage. It does not deploy to Render and does not include games.
+CrimBlox platform API and Supabase persistence integration. This repository does not deploy to Render and does not include games. The supplied API core is framework-free and uses a JSON-shaped state model; the Supabase adapter preserves that model while storing the state in PostgreSQL and uploaded project/asset blobs in a private Storage bucket.
 
 ## Supabase project
 
-- Project dashboard: https://supabase.com/dashboard/project/iimsbtpxsbomnkwxtkpp
-- Project API URL: https://iimsbtpxsbomnkwxtkpp.supabase.co
-- Keep secret/service-role keys out of Git. Browser/client code must only use the publishable/anon key.
+- Project dashboard: https://supabase.com/dashboard/project/wsvyyussvzqolozstatl
+- Project API URL: https://wsvyyussvzqolozstatl.supabase.co
+- Project ref: `wsvyyussvzqolozstatl`
+- Database table: `public.crimblox_backend_state` (RLS enabled; no anon/authenticated table grants)
+- Private object bucket: `crimblox-backend-objects`
 
-## Keep the Supabase project active
+## Server configuration
 
-The GitHub Actions workflow at `.github/workflows/keep-supabase-active.yml` calls the Supabase REST API every four days and can also be run manually.
+The trusted Node.js server requires these environment variables:
 
-Add these two repository Actions secrets in **Settings → Secrets and variables → Actions → New repository secret**:
+- `SUPABASE_URL=https://wsvyyussvzqolozstatl.supabase.co`
+- `SUPABASE_SERVICE_ROLE_KEY` = the project's service-role/secret key, stored only in the backend host's secret manager. Never put this key in GitHub files, browser code, or GitHub keepalive secrets.
+- Optional: `ADMIN_USERS`, `NODE_ENV`, `PORT`
 
-- `SUPABASE_URL` = `https://iimsbtpxsbomnkwxtkpp.supabase.co`
-- `SUPABASE_ANON_KEY` = the project's publishable key (safe for client-side use; never use the service-role key here)
+`src/supabase-env.js` is a persistence adapter for the existing `core.js` environment contract. The server must await `createSupabaseEnv()` before calling `createCore(env)`, because initial state is fetched from Supabase during adapter creation. Configure graceful shutdown to await `env.flush(core.db)`.
 
-Then open **Actions → Keep Supabase project active → Run workflow** once to test it.
+**Migration status:** database foundation and adapter are in place, but this is not yet a fully deployed or production-ready API. The supplied files must be integrated into the server entry point, and end-to-end tests must run against the Supabase adapter before launch. The existing core currently saves its full JSON-shaped state as one row, which is a compatibility bridge rather than a normalized, high-concurrency data model.
 
-**Important:** This is a best-effort keepalive, not a guarantee against pausing. GitHub scheduled workflows can be delayed or disabled by GitHub policy, and Supabase's inactivity/pausing rules can change. Check the workflow run history periodically.
+## Keep Supabase active
 
-## Backend integration status
+The GitHub Actions workflow `.github/workflows/keep-supabase-active.yml` pings the Supabase Auth health endpoint every four days and supports manual runs.
 
-The Supabase database schema and security policies have been created in the Supabase project. The existing API's core persistence/auth routes still need a complete migration to Supabase; do not treat this repository as production-ready until those routes and integration tests are completed.
+Configure repository secrets at **Settings → Secrets and variables → Actions → New repository secret**:
+
+- `SUPABASE_URL` = `https://wsvyyussvzqolozstatl.supabase.co`
+- `SUPABASE_ANON_KEY` = the project's publishable key (or legacy anon key). Never use the service-role key for this workflow.
+
+Then run **Actions → Keep Supabase project active → Run workflow** to test it. This is best-effort only, not a guarantee against inactivity pausing; check run history periodically.
