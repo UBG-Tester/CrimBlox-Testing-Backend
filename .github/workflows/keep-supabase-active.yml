@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - name: Ping Supabase REST API
+      - name: Ping Supabase Auth health endpoint
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
@@ -28,7 +28,7 @@ jobs:
             echo "::error::Add SUPABASE_URL and SUPABASE_ANON_KEY under GitHub repository Actions secrets."
             exit 1
           fi
-          url="${SUPABASE_URL%/}/rest/v1/forum_categories?select=id&limit=1"
+          url="${SUPABASE_URL%/}/auth/v1/health"
           status="$(curl --silent --show-error --output /tmp/supabase-response.json --write-out '%{http_code}' \
             --max-time 20 \
             --header "apikey: ${SUPABASE_ANON_KEY}" \
@@ -37,7 +37,7 @@ jobs:
             "$url")"
           cat /tmp/supabase-response.json
           if [ "$status" -lt 200 ] || [ "$status" -ge 300 ]; then
-            echo "::error::Supabase REST ping failed with HTTP $status"
+            echo "::error::Supabase health ping failed with HTTP $status"
             exit 1
           fi
-          echo "Supabase REST ping succeeded (HTTP $status)."
+          echo "Supabase Auth health ping succeeded (HTTP $status)."
