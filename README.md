@@ -27,9 +27,6 @@ The trusted Node.js server requires these environment variables:
 
 The GitHub Actions workflow `.github/workflows/keep-supabase-active.yml` queries the non-sensitive `crimblox_keepalive` marker table through the database REST API every four days and supports manual runs.
 
-Configure repository secrets at **Settings → Secrets and variables → Actions → New repository secret**:
+The workflow is self-configured with the project's public publishable key, so no GitHub Actions secrets are needed for this read-only ping. The publishable key is designed for client-side use; the service-role/secret key must never be placed in this workflow.
 
-- `SUPABASE_URL` = `https://wsvyyussvzqolozstatl.supabase.co`
-- `SUPABASE_ANON_KEY` = the project's publishable key (or legacy anon key). Never use the service-role key for this workflow.
-
-Then run **Actions → Keep Supabase project active → Run workflow** to test it. This is best-effort only, not a guarantee against inactivity pausing; check run history periodically.
+To test it, open **Actions → Keep Supabase project active → Run workflow**. This is best-effort only, not a guarantee against inactivity pausing; check run history periodically.
