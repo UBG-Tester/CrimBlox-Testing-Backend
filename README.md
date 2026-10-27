@@ -7,7 +7,8 @@ CrimBlox platform API and Supabase persistence integration. This repository does
 - Project dashboard: https://supabase.com/dashboard/project/wsvyyussvzqolozstatl
 - Project API URL: https://wsvyyussvzqolozstatl.supabase.co
 - Project ref: `wsvyyussvzqolozstatl`
-- Database table: `public.crimblox_backend_state` (RLS enabled; no anon/authenticated table grants)
+- State table: `public.crimblox_backend_state` (RLS enabled; service-role only)
+- Keepalive marker: `public.crimblox_keepalive` (only a single non-sensitive marker row is publicly readable)
 - Private object bucket: `crimblox-backend-objects`
 
 ## Server configuration
@@ -24,7 +25,7 @@ The trusted Node.js server requires these environment variables:
 
 ## Keep Supabase active
 
-The GitHub Actions workflow `.github/workflows/keep-supabase-active.yml` pings the Supabase Auth health endpoint every four days and supports manual runs.
+The GitHub Actions workflow `.github/workflows/keep-supabase-active.yml` queries the non-sensitive `crimblox_keepalive` marker table through the database REST API every four days and supports manual runs.
 
 Configure repository secrets at **Settings → Secrets and variables → Actions → New repository secret**:
 
