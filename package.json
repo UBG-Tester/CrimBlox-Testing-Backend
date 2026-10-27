@@ -2,11 +2,9 @@
   "name": "crimblox-testing-backend",
   "version": "0.1.0",
   "private": true,
-  "description": "CrimBlox platform API persistence integration for Supabase",
-  "main": "src/server.js",
+  "description": "CrimBlox platform API Supabase persistence adapter",
   "scripts": {
-    "start": "node src/server.js",
-    "test": "node --test tests/*.test.js"
+    "check": "node --check src/supabase-env.js"
   },
   "engines": { "node": ">=20" }
 }
