@@ -1,10 +1,13 @@
 {
-  "name": "crimblox-testing-backend",
-  "version": "0.1.0",
+  "name": "crimblox-backend",
+  "version": "1.0.0",
   "private": true,
-  "description": "CrimBlox platform API Supabase persistence adapter",
+  "description": "CrimBlox Platform API, Marketplace, multiplayer, and Supabase persistence",
+  "engines": { "node": ">=20" },
   "scripts": {
-    "check": "node --check src/supabase-env.js"
-  },
-  "engines": { "node": ">=20" }
+    "start": "node src/server.js",
+    "test": "node --test tests/api.test.js tests/multiplayer.test.js",
+    "build:marketplace": "node build-marketplace.js",
+    "check": "node --check src/server.js && node --check src/core.js && node --check src/multiplayer.js && node --check src/supabase-env.js"
+  }
 }
