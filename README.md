@@ -1,6 +1,6 @@
 # CrimBlox Development Platform
 
-CrimBlox's browser-based development platform and Supabase backend foundation. The static client is published through GitHub Pages; the Node.js API and shared CAGE game runtime require a separate server deployment.
+CrimBlox's browser-based development platform and Supabase backend foundation. The static client is published through GitHub Pages; the Node.js API and shared CAGE experience runtime require a separate server deployment.
 
 - Live platform: https://ubg-tester.github.io/CrimBlox-Testing-Backend/platform/
 - QA test lab: https://ubg-tester.github.io/CrimBlox-Testing-Backend/testing/
@@ -13,7 +13,7 @@ CrimBlox's browser-based development platform and Supabase backend foundation. T
 - Private Creator Marketplace uploads for models, textures, images, video, audio, scripts, and plugins; metadata search and licensed download links
 - Experience publishing with versioned project package uploads and public/private visibility
 - Creator product listings, CR test-currency wallets, atomic purchase RPC, creator proceeds, and a 10% platform fee
-- Realtime multiplayer test-place presence and chat
+- Realtime shared-session test-place presence and chat
 - Site checks for Supabase tables, auth state, and Storage
 
 ## Important current boundaries
