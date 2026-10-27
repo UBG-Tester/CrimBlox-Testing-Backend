@@ -18,7 +18,7 @@ CrimBlox's browser-based development platform and Supabase backend foundation. T
 
 ## Important current boundaries
 
-This is not yet a 1:1 Roblox replacement. Imported Roblox place/model files are stored as versioned assets but are not automatically executed. The existing CAGE renderer must be integrated from its actual source; it is not recreated in this repository. The game server/runtime, server-authoritative physics and replication, scripting sandbox, full Studio editor, asset moderation/transcoding/CDN, notifications UI, cash payments and withdrawals, and external Roblox account integration are not complete. CR is an internal test currency and is not Robux or cash. Wallets start at zero; no real-money provider or top-up mechanism is configured.
+CrimBlox is an independent development platform; it is not a drop-in replacement for another platform. Imported place and model files are stored as versioned assets but are not automatically executed. The existing CAGE renderer must be integrated from its actual source; it is not recreated in this repository. The game server/runtime, server-authoritative physics and replication, scripting sandbox, full Studio editor, asset moderation/transcoding/CDN, notifications UI, cash payments and withdrawals, and external platform account integration are not complete. CR is an internal test currency and is not cash or another platform's currency. Wallets start at zero; no real-money provider or top-up mechanism is configured.
 
 ## Supabase project
 
