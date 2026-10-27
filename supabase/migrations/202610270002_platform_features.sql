@@ -114,3 +114,26 @@ grant select, insert, update, delete on public.crimblox_forum_reactions to authe
 grant select, insert, update, delete on public.crimblox_assets to authenticated;
 grant select on public.crimblox_chat_rooms to authenticated;
 grant select, insert on public.crimblox_chat_messages to authenticated;
+
+-- Explicit profile foreign keys let PostgREST embed usernames with forum/assets/chat rows.
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname='crimblox_topics_profile_fk') then
+    alter table public.crimblox_forum_topics add constraint crimblox_topics_profile_fk foreign key (author_id) references public.crimblox_profiles(id) on delete cascade;
+  end if;
+  if not exists (select 1 from pg_constraint where conname='crimblox_assets_profile_fk') then
+    alter table public.crimblox_assets add constraint crimblox_assets_profile_fk foreign key (owner_id) references public.crimblox_profiles(id) on delete cascade;
+  end if;
+  if not exists (select 1 from pg_constraint where conname='crimblox_messages_profile_fk') then
+    alter table public.crimblox_chat_messages add constraint crimblox_messages_profile_fk foreign key (author_id) references public.crimblox_profiles(id) on delete cascade;
+  end if;
+end $$;
+
+-- Enable live inserts for the test-place chat feed.
+do $$ begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname='supabase_realtime' and schemaname='public' and tablename='crimblox_chat_messages'
+  ) then
+    alter publication supabase_realtime add table public.crimblox_chat_messages;
+  end if;
+end $$;
