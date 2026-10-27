@@ -1,6 +1,24 @@
-# CrimBlox Testing Backend
+# CrimBlox Development Platform
 
-CrimBlox platform API and Supabase persistence integration. This repository does not deploy to Render and does not include games. The supplied API core is framework-free and uses a JSON-shaped state model; the Supabase adapter preserves that model while storing the state in PostgreSQL and uploaded project/asset blobs in a private Storage bucket.
+CrimBlox's browser-based development platform and Supabase backend foundation. The static client is published through GitHub Pages; the Node.js API and shared CAGE game runtime require a separate server deployment.
+
+- Live platform: https://ubg-tester.github.io/CrimBlox-Testing-Backend/platform/
+- QA test lab: https://ubg-tester.github.io/CrimBlox-Testing-Backend/testing/
+- GitHub Pages landing: https://ubg-tester.github.io/CrimBlox-Testing-Backend/
+
+## Current application modules
+
+- Supabase Auth email/password sign-up and sign-in with CrimBlox profiles
+- Persistent DevForum topics, categories, search, likes/dislikes, and emoji reactions
+- Private Creator Marketplace uploads for models, textures, images, video, audio, scripts, and plugins; metadata search and licensed download links
+- Experience publishing with versioned project package uploads and public/private visibility
+- Creator product listings, CR test-currency wallets, atomic purchase RPC, creator proceeds, and a 10% platform fee
+- Realtime multiplayer test-place presence and chat
+- Site checks for Supabase tables, auth state, and Storage
+
+## Important current boundaries
+
+This is not yet a 1:1 Roblox replacement. Imported Roblox place/model files are stored as versioned assets but are not automatically executed. The existing CAGE renderer must be integrated from its actual source; it is not recreated in this repository. The game server/runtime, server-authoritative physics and replication, scripting sandbox, full Studio editor, asset moderation/transcoding/CDN, notifications UI, cash payments and withdrawals, and external Roblox account integration are not complete. CR is an internal test currency and is not Robux or cash. Wallets start at zero; no real-money provider or top-up mechanism is configured.
 
 ## Supabase project
 
@@ -10,6 +28,10 @@ CrimBlox platform API and Supabase persistence integration. This repository does
 - State table: `public.crimblox_backend_state` (RLS enabled; service-role only)
 - Keepalive marker: `public.crimblox_keepalive` (only a single non-sensitive marker row is publicly readable)
 - Private object bucket: `crimblox-backend-objects`
+
+## Database migrations
+
+The Supabase migrations in `supabase/migrations/` create the profile, forum, reaction, asset, chat, experience/version, creator product, wallet, ledger, purchase, notification, and game-session tables. Row-level security is enabled. Creator purchases use the `crimblox_purchase_product` database function so the debit/credit transaction is atomic; clients cannot write directly to the economy ledger or change wallet balances.
 
 ## Server configuration
 
