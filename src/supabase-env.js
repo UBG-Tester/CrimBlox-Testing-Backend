@@ -36,7 +36,7 @@ async function createSupabaseEnv({
   let saveChain = Promise.resolve();
   const saveState = db => {
     const snapshot = JSON.parse(JSON.stringify(db));
-    saveChain = saveChain.then(() => request(tableUrl + '?on_conflict=id', {
+    saveChain = saveChain.catch(() => {}).then(() => request(tableUrl + '?on_conflict=id', {
       method: 'POST',
       headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
       body: JSON.stringify({ id: 1, state: snapshot, updated_at: new Date().toISOString() }),
