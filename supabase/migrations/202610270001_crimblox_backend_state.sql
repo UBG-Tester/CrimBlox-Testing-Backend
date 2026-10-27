@@ -24,3 +24,17 @@ on conflict (id) do nothing;
 insert into storage.buckets (id, name, public, file_size_limit)
 values ('crimblox-backend-objects', 'crimblox-backend-objects', false, 40000000)
 on conflict (id) do update set public = false, file_size_limit = 40000000;
+
+-- A deliberately non-sensitive marker lets the GitHub Actions keepalive make a
+-- real database REST request without granting access to application state.
+create table if not exists public.crimblox_keepalive (
+  id integer primary key check (id = 1),
+  touched_at timestamptz not null default now()
+);
+alter table public.crimblox_keepalive enable row level security;
+revoke all on table public.crimblox_keepalive from anon, authenticated;
+grant select on table public.crimblox_keepalive to anon;
+drop policy if exists "public can read keepalive marker" on public.crimblox_keepalive;
+create policy "public can read keepalive marker"
+  on public.crimblox_keepalive for select to anon using (true);
+insert into public.crimblox_keepalive (id) values (1) on conflict (id) do nothing;
