@@ -20,14 +20,10 @@ jobs:
     steps:
       - name: Ping the Supabase database marker
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: https://wsvyyussvzqolozstatl.supabase.co
+          SUPABASE_ANON_KEY: sb_publishable_LFnNpZ0Y9ZLjftvo8d9EAw_g26ztm3o
         run: |
           set -euo pipefail
-          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_ANON_KEY:-}" ]; then
-            echo "::error::Add SUPABASE_URL and SUPABASE_ANON_KEY under GitHub repository Actions secrets."
-            exit 1
-          fi
           url="${SUPABASE_URL%/}/rest/v1/crimblox_keepalive?select=id&limit=1"
           status="$(curl --silent --show-error --output /tmp/supabase-response.json --write-out '%{http_code}' \
             --max-time 20 \
